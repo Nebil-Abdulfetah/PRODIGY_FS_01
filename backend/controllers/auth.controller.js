@@ -33,7 +33,23 @@ async function signUp(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
-async function logIn(req, res) {}
+async function logIn(req, res) {
+  const {email, password} = req.body;
+  if(!email || !password){
+    return res.status(400).json({message: "All fields are required!"});
+  }
+  const user = await authServices.isUser(email);
+  if(!user){
+    return res.status(400).json({message: "Invalid email or password"});
+  }
+  const validPassword = await bcrypt.compare(password, user.password);
+  if(!validPassword){
+    return res.status(400).json({message: "Invalid email or password"});
+  }
+  const token = await generateToken(user.id, res);
+  console.log(user.user_id, user.role)
+  return res.status(200).json(token);
+}
 async function logOut(req, res) {}
 module.exports = {
   signUp,

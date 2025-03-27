@@ -10,7 +10,6 @@ async function signUp(f_name, l_name, email, role, password) {
     throw error;
   }
 }
-
 async function isUser(email) {
   try {
     const sql = "SELECT * FROM USERS WHERE EMAIL = ?";
